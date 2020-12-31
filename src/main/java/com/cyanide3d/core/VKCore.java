@@ -38,27 +38,32 @@ public class VKCore {
 
     @SneakyThrows
     public Message getMessage() {
-        MessagesGetLongPollHistoryQuery eventsQuery = vk.messages()
-                .getLongPollHistory(actor)
-                .ts(ts);
-        if (maxMsgId > 0) {
-            eventsQuery.maxMsgId(maxMsgId);
-        }
-        List<Message> messages = eventsQuery
-                .execute()
-                .getMessages().getItems();
-        if (!messages.isEmpty()) {
-            ts = vk.messages()
-                    .getLongPollServer(actor)
-                    .execute()
-                    .getTs();
-        }
-        if (!messages.isEmpty() && !messages.get(0).isOut()) {
-            int messageId = messages.get(0).getId();
-            if (messageId > maxMsgId) {
-                maxMsgId = messageId;
+        try {
+            MessagesGetLongPollHistoryQuery eventsQuery = vk.messages()
+                    .getLongPollHistory(actor)
+                    .ts(ts);
+            if (maxMsgId > 0) {
+                eventsQuery.maxMsgId(maxMsgId);
             }
-            return messages.get(0);
+            List<Message> messages = eventsQuery
+                    .execute()
+                    .getMessages().getItems();
+            if (!messages.isEmpty()) {
+                ts = vk.messages()
+                        .getLongPollServer(actor)
+                        .execute()
+                        .getTs();
+            }
+            if (!messages.isEmpty() && !messages.get(0).isOut()) {
+                int messageId = messages.get(0).getId();
+                if (messageId > maxMsgId) {
+                    maxMsgId = messageId;
+                }
+                return messages.get(0);
+            }
+        } catch (Exception e){
+            System.out.println("Problem with get message");
+            ts = vk.messages().getLongPollServer(actor).execute().getTs();
         }
         return null;
     }

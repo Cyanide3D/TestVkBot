@@ -39,7 +39,7 @@ public class VKServer {
                     executor.execute(messengerHandler);
                 }
             } catch (Exception e) {
-                System.err.println("Some error with connection!\nTry connection after 5 second...");
+                System.err.println("Some error with connection!\nTry connection in 5 second...");
                 Thread.sleep(4600);
             }
         }

@@ -27,7 +27,7 @@ public class Server extends Thread{
                 String message = buffer.readLine();
                 if (message != null){
                     ExecutorService executor = Executors.newCachedThreadPool();
-                    executor.execute(new VerifyMessageHandler(message, resendManager));
+                    executor.execute(new RequestMessageAnalyzer(message, resendManager));
                 }
                 buffer.close();
             } catch (Exception e) {

@@ -5,12 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
 
-public class VerifyMessageHandler implements Runnable{
+public class RequestMessageAnalyzer implements Runnable{
 
     String message;
     ResendManager resendManager;
 
-    public VerifyMessageHandler(String message, ResendManager resendManager) {
+    public RequestMessageAnalyzer(String message, ResendManager resendManager) {
         this.message = message;
         this.resendManager = resendManager;
     }

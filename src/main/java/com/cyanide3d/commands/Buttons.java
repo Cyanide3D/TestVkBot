@@ -11,7 +11,6 @@ public class Buttons extends Command{
 
     @Override
     public void execute(Message message, ResendManager manager) {
-        System.out.println(message.getPeerId());
         manager.keyboard("Лови ;)", message);
     }
 }
