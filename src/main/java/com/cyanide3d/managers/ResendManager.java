@@ -23,8 +23,8 @@ public class ResendManager {
         vkCore.getVk().messages().send(vkCore.getActor()).message(msg).peerId(message.getPeerId()).randomId(new Random().nextInt(10000)).execute();
     }
     @SneakyThrows
-    public void sendPrivateMessage(String msg, Message message){
-        vkCore.getVk().messages().send(vkCore.getActor()).message(msg).userId(message.getFromId()).randomId(new Random().nextInt(10000)).execute();
+    public void sendPrivateMessage(int userId, String msg){
+        vkCore.getVk().messages().send(vkCore.getActor()).message(msg).userId(userId).randomId(new Random().nextInt(10000)).execute();
     }
     @SneakyThrows
     public void keyboard(String msg, Message message) {

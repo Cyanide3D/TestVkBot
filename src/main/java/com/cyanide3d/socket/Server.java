@@ -20,13 +20,13 @@ public class Server extends Thread{
     @SneakyThrows
     public void run() {
         ServerSocket serverSocket = new ServerSocket(port);
+        ExecutorService executor = Executors.newCachedThreadPool();
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String message = buffer.readLine();
                 if (message != null){
-                    ExecutorService executor = Executors.newCachedThreadPool();
                     executor.execute(new RequestMessageAnalyzer(message, resendManager));
                 }
                 buffer.close();

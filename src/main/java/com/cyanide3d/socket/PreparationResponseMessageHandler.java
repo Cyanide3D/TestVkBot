@@ -1,5 +1,7 @@
 package com.cyanide3d.socket;
 
+import com.vk.api.sdk.objects.base.Image;
+import com.vk.api.sdk.objects.base.StickerAnimation;
 import com.vk.api.sdk.objects.messages.Message;
 import com.vk.api.sdk.objects.messages.MessageAttachment;
 import com.vk.api.sdk.objects.photos.PhotoSizes;
@@ -11,11 +13,6 @@ import java.util.List;
 
 public class PreparationResponseMessageHandler {
 
-    Message message;
-
-    public PreparationResponseMessageHandler(Message message) {
-        this.message = message;
-    }
 
     public String photo(MessageAttachment attachment) {
         List<PhotoSizes> photo = attachment.getPhoto().getSizes();
@@ -24,6 +21,15 @@ public class PreparationResponseMessageHandler {
 
     public String video(MessageAttachment attachment) {
         return "https://vk.com/video?z=video" + attachment.getVideo().getOwnerId() + "_" + attachment.getVideo().getId();
+    }
+
+    public String sticker(MessageAttachment attachment){
+        List<Image> staticSticker = attachment.getSticker().getImages();
+        List<StickerAnimation> animationSticker = attachment.getSticker().getAnimations();
+        if (animationSticker != null){
+            return animationSticker.get(0).getUrl().toString();
+        }
+        return staticSticker.get(0).getUrl().toString();
     }
 
     public String doc(MessageAttachment attachment) {
@@ -42,16 +48,16 @@ public class PreparationResponseMessageHandler {
         return "Аудиосообщение: " + attachment.getAudioMessage().getLinkMp3().toString();
     }
 
-    public String wall() {
-        List<MessageAttachment> selfAttachments = message.getAttachments();
+    public String wall(Message message) {
+        List<MessageAttachment> attachments = message.getAttachments();
         StringBuilder result = new StringBuilder()
-                .append("\n**ЗАПИСЬ СО СТЕНЫ**\n")
+                .append("**ЗАПИСЬ СО СТЕНЫ**\n")
                 .append("Содержание:\n");
-        if (selfAttachments != null) {
-            if (selfAttachments.get(0).getWall().getCopyHistory() != null) {
-                result.append(makeHistoryAttachments(selfAttachments));
+        if (attachments != null) {
+            if (attachments.get(0).getWall().getCopyHistory() != null) {
+                result.append(makeHistoryAttachments(attachments));
             } else {
-                result.append(makeSelfAttachments(selfAttachments));
+                result.append(makeSelfAttachments(attachments));
             }
         }
         return result.toString();

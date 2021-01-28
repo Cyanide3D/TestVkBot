@@ -14,13 +14,13 @@ public class ResponseMessageAnalyzer {
     @SneakyThrows
     public String analyze() {
         StringBuilder result = new StringBuilder();
-        PreparationResponseMessageHandler preparationResponseMessageHandler = new PreparationResponseMessageHandler(message);
+        PreparationResponseMessageHandler preparationResponseMessageHandler = new PreparationResponseMessageHandler();
         for (MessageAttachment attachment : message.getAttachments()) {
             String type = attachment.getType().getValue();
             if (type.equals("photo")) {
                 result.append(preparationResponseMessageHandler.photo(attachment));
             } else if (type.equals("wall")) {
-                result.append(preparationResponseMessageHandler.wall());
+                result.append(preparationResponseMessageHandler.wall(message));
             } else if (type.equals("video")) {
                 result.append(preparationResponseMessageHandler.video(attachment));
             } else if (type.equals("doc")) {
@@ -31,8 +31,10 @@ public class ResponseMessageAnalyzer {
                 result.append(preparationResponseMessageHandler.audioMessage(attachment));
             } else if (type.equals("audio")) {
                 result.append(preparationResponseMessageHandler.audio(attachment));
+            } else if (type.equals("sticker")) {
+                result.append(preparationResponseMessageHandler.sticker(attachment));
             } else {
-                result.append("'Вложение'");
+                result.append(" 'Вложение'");
             }
             result.append("\n");
         }

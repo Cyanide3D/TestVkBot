@@ -13,6 +13,6 @@ public class Help extends Command {
     @Override
     @SneakyThrows
     public void execute(Message message, ResendManager manager) {
-        manager.sendGroupMessage("It's help", message);
+        manager.sendGroupMessage("Bot have'nt commands, just have fan :)", message);
     }
 }
