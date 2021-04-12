@@ -1,16 +1,18 @@
-package com.cyanide3d.lib.mylittleorm.handler;
+package com.cyanide3d.lib.mylittleorm.utils;
 
 import com.cyanide3d.lib.mylittleorm.annotations.Primary;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
 
-public class ModelPrimaryKeyHandler {
+public class PrimaryKeyUtils {
 
 
-    public String getPrimaryKey(Object object){
+    private PrimaryKeyUtils() {
+    }
+
+    public static String getPrimaryKey(Class<?> clazz){
         String primaryKey = "id";
-        Class<?> clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(Primary.class)){
@@ -20,9 +22,13 @@ public class ModelPrimaryKeyHandler {
         return primaryKey;
     }
 
+    public static boolean isPrimaryKey(Field field) {
+        return field.isAnnotationPresent(Primary.class);
+    }
+
     @SneakyThrows
-    public int getValueOfPrimaryKey(Object object) {
-        Field fieldId = object.getClass().getDeclaredField(getPrimaryKey(object));
+    public static int getValueOfPrimaryKey(Object object) {
+        Field fieldId = object.getClass().getDeclaredField(getPrimaryKey(object.getClass()));
         fieldId.setAccessible(true);
         return (int) fieldId.get(object);
     }

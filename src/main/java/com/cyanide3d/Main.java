@@ -7,7 +7,6 @@ import com.cyanide3d.lib.ApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-        new TestMain().run();
         ApplicationContext context = Application.run("com", "settings.properties");
         VKServer vkServer = context.getObject(VKServer.class);
         vkServer.start();

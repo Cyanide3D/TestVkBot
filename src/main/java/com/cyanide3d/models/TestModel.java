@@ -1,12 +1,18 @@
 package com.cyanide3d.models;
 
 import com.cyanide3d.lib.mylittleorm.annotations.Primary;
-import lombok.Data;
 
-@Data
 public class TestModel {
-    String name = "geYshA";
     @Primary
-    int primary_id;
-    String lastname = "sssssss";
+    Integer id = 1;
+    String name = "123";
+    String lastname = "321";
+
+    @Override
+    public String toString() {
+        return "TestModel{" +
+                "name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                '}';
+    }
 }

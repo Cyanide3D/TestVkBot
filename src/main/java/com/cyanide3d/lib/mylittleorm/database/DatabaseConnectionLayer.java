@@ -1,6 +1,5 @@
 package com.cyanide3d.lib.mylittleorm.database;
 
-import com.cyanide3d.lib.mylittleorm.handler.ModelPrimaryKeyHandler;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
@@ -11,7 +10,6 @@ import java.util.List;
 //TODO NEED REFACTOR NAHOOY
 
 public class DatabaseConnectionLayer {
-    ModelPrimaryKeyHandler modelPrimaryKeyHandler;
     String DB_URL = "jdbc:sqlite:testorm.db";
     String DB_USER = "root";
     String DB_PASSWORD = "root";
@@ -19,38 +17,40 @@ public class DatabaseConnectionLayer {
 
     @SneakyThrows
     public DatabaseConnectionLayer() {
-        Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        modelPrimaryKeyHandler = new ModelPrimaryKeyHandler();
-        this.connection = con;
+        this.connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 
     @SneakyThrows
-    public <T> List<T> findByField(String query, Object pattern) {
+    public <T> List<T> findAll(String query, Class<?> clazz) {
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
+        return makeEntityList(clazz, resultSet);
+    }
+
+    @SneakyThrows
+    public <T> List<T> findByField(String query, Object param, Class<?> clazz) {
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setObject(1, param);
+        ResultSet resultSet = statement.executeQuery();
+        return makeEntityList(clazz, resultSet);
+    }
+
+    private <T> List<T> makeEntityList(Class<?> clazz, ResultSet resultSet) throws SQLException, InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+        Field[] fields = clazz.getDeclaredFields();
         List<T> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(fillObject(pattern, resultSet));
+            Object o = clazz.getDeclaredConstructor().newInstance();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                field.set(o, resultSet.getObject(field.getName().toLowerCase()));
+            }
+            result.add((T) o);
         }
         return result;
     }
 
     @SneakyThrows
-    public <T> T findByPrimaryKey(String query, Object pattern, int id) {
-        T t = (T) pattern;
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, id);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-             t = fillObject(pattern, resultSet);
-        }
-        resultSet.close();
-        statement.close();
-        return t;
-    }
-
-    @SneakyThrows
-    public void save(String query, List<Object> params) {
+    public void saveOrUpdate(String query, List<Object> params) {
         PreparedStatement statement = connection.prepareStatement(query);
         int index = 1;
         for (Object param : params) {
@@ -65,20 +65,5 @@ public class DatabaseConnectionLayer {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.executeUpdate();
         statement.close();
-    }
-
-
-
-
-    @SneakyThrows
-    private <T> T fillObject(Object pattern, ResultSet resultSet) {
-        Class<?> clazz = pattern.getClass();
-        T obj = (T) clazz.getDeclaredConstructor().newInstance();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            field.set(obj, resultSet.getObject(field.getName()));
-        }
-        return obj;
     }
 }
