@@ -28,17 +28,15 @@ public class FindByFieldMethodConfigurer implements MethodConfigurer {
     private Object getObject(Method method, Object[] args, Class<?> clazz, String name) {
         String findField = StringUtils.substringAfter(name, "findBy").toLowerCase();
         Class<?> returnClass = method.getReturnType();
-        try {
             List<Object> entity = dao.findByField(findField, clazz, args[0]);
             if (returnClass.equals(List.class)) {
                 return entity;
             } else if (returnClass.equals(Optional.class)) {
                 return entity.isEmpty() ? Optional.empty() : Optional.ofNullable(entity.get(0));
             } else {
+                if (entity.isEmpty())
+                    throw new EntityNotFoundException("Can't find entity by [" + findField + " = " + args[0] + "].");
                 return entity.get(0);
             }
-        } catch (IndexOutOfBoundsException ex) {
-            throw new EntityNotFoundException("Can't find entity by [" + findField + " = " + args[0] + "].");
-        }
     }
 }
