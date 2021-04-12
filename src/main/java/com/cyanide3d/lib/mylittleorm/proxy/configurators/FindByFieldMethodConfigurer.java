@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 public class FindByFieldMethodConfigurer implements MethodConfigurer {
 
@@ -26,17 +27,17 @@ public class FindByFieldMethodConfigurer implements MethodConfigurer {
 
     private Object getObject(Method method, Object[] args, Class<?> clazz, String name) {
         String findField = StringUtils.substringAfter(name, "findBy").toLowerCase();
+        Class<?> returnClass = method.getReturnType();
         try {
-            return isReturnTypeArray(method)
-                    ? dao.findByField(findField, clazz, args[0])
-                    : dao.findByField(findField, clazz, args[0]).get(0);
+            if (returnClass.equals(List.class)) {
+                return dao.findByField(findField, clazz, args[0]);
+            } else if (returnClass.equals(Optional.class)) {
+                return Optional.ofNullable(dao.findByField(findField, clazz, args[0]));
+            } else {
+                return dao.findByField(findField, clazz, args[0]).get(0);
+            }
         } catch (IndexOutOfBoundsException ex) {
             throw new EntityNotFoundException("Can't find entity by [" + findField + " = " + args[0] + "].");
         }
     }
-
-    private boolean isReturnTypeArray(Method method) {
-        return method.getReturnType().equals(List.class);
-    }
-
 }
