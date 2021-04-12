@@ -1,21 +1,21 @@
 package com.cyanide3d.lib.mylittleorm.proxy.configurators;
 
-import com.cyanide3d.lib.mylittleorm.handler.DaoRequestInvocationHandler;
+import com.cyanide3d.lib.mylittleorm.database.DatabaseStore;
 
 import java.lang.reflect.Method;
 
 public class FindAllMethodConfigurer implements MethodConfigurer {
 
-    private final DaoRequestInvocationHandler daoRequestInvocationHandler;
+    private final DatabaseStore dao;
 
-    public FindAllMethodConfigurer(DaoRequestInvocationHandler daoRequestInvocationHandler) {
-        this.daoRequestInvocationHandler = daoRequestInvocationHandler;
+    public FindAllMethodConfigurer(DatabaseStore dao) {
+        this.dao = dao;
     }
 
     @Override
     public Object configure(Method method, Object[] args, Class<?> clazz) {
         if (method.getName().equalsIgnoreCase("findAll")) {
-            return daoRequestInvocationHandler.findAll(clazz);
+            return dao.findAll(clazz);
         }
         return null;
     }

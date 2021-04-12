@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TestRepo extends Repository<Integer, TestModel> {
 
-    List<TestModel> findByLastname(String lastname);
+    TestModel findByLastname(String lastname);
 
 }

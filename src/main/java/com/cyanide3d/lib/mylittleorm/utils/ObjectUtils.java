@@ -23,7 +23,6 @@ public class ObjectUtils {
     }
 
     @SneakyThrows
-    //TODO
     public static List<Object> valueExtractWithoutPrimary(Object object) {
         List<Object> values = new ArrayList<>();
         Field[] fields = object.getClass().getDeclaredFields();

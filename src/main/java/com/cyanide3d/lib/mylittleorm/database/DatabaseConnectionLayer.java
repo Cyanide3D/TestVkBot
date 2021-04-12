@@ -7,8 +7,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO NEED REFACTOR NAHOOY
-
 public class DatabaseConnectionLayer {
     String DB_URL = "jdbc:sqlite:testorm.db";
     String DB_USER = "root";
