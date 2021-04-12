@@ -1,19 +1,19 @@
 package com.cyanide3d.lib.mylittleorm.handler;
 
-import com.cyanide3d.lib.mylittleorm.database.DatabaseStore;
-import com.cyanide3d.lib.mylittleorm.database.DatabaseConnectionLayer;
+import com.cyanide3d.lib.mylittleorm.database.DatabaseLayer;
 import com.cyanide3d.lib.mylittleorm.query.SQLDialect;
 import com.cyanide3d.lib.mylittleorm.utils.ObjectUtils;
 import com.cyanide3d.lib.mylittleorm.utils.PrimaryKeyUtils;
 
 import java.util.List;
 
-public class DaoRequestInvocationHandler implements DatabaseStore {
+public class DaoRequestInvocationHandler implements DatabaseProvider {
 
-    private final DatabaseConnectionLayer dao = new DatabaseConnectionLayer();
+    private final DatabaseLayer dao;
     private final SQLDialect dialect;
 
-    public DaoRequestInvocationHandler(SQLDialect dialect) {
+    public DaoRequestInvocationHandler(SQLDialect dialect, DatabaseLayer dao) {
+        this.dao = dao;
         this.dialect = dialect;
     }
 

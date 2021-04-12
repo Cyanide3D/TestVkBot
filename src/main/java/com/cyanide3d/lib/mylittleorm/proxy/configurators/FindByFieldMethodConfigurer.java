@@ -1,7 +1,7 @@
 package com.cyanide3d.lib.mylittleorm.proxy.configurators;
 
 import com.cyanide3d.exception.EntityNotFoundException;
-import com.cyanide3d.lib.mylittleorm.database.DatabaseStore;
+import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
@@ -9,9 +9,9 @@ import java.util.List;
 
 public class FindByFieldMethodConfigurer implements MethodConfigurer {
 
-    private final DatabaseStore dao;
+    private final DatabaseProvider dao;
 
-    public FindByFieldMethodConfigurer(DatabaseStore dao) {
+    public FindByFieldMethodConfigurer(DatabaseProvider dao) {
         this.dao = dao;
     }
 

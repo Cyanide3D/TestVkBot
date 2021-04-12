@@ -1,5 +1,6 @@
 package com.cyanide3d.lib.mylittleorm.proxy;
 
+import com.cyanide3d.lib.mylittleorm.database.DatabaseConnectionLayer;
 import com.cyanide3d.lib.mylittleorm.handler.DaoRequestInvocationHandler;
 import com.cyanide3d.lib.mylittleorm.query.sqlitedialect.SQLiteDialect;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,7 @@ public class MethodParserImpl implements MethodParser {
     private final DaoRequestInvocationHandler daoRequestInvocationHandler;
 
     public MethodParserImpl() {
-        daoRequestInvocationHandler = new DaoRequestInvocationHandler(new SQLiteDialect());
+        daoRequestInvocationHandler = new DaoRequestInvocationHandler(new SQLiteDialect(), new DatabaseConnectionLayer());
     }
 
     @Override

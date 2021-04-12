@@ -1,14 +1,14 @@
 package com.cyanide3d.lib.mylittleorm.proxy.configurators;
 
-import com.cyanide3d.lib.mylittleorm.database.DatabaseStore;
+import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
 
 import java.lang.reflect.Method;
 
 public class FindAllMethodConfigurer implements MethodConfigurer {
 
-    private final DatabaseStore dao;
+    private final DatabaseProvider dao;
 
-    public FindAllMethodConfigurer(DatabaseStore dao) {
+    public FindAllMethodConfigurer(DatabaseProvider dao) {
         this.dao = dao;
     }
 

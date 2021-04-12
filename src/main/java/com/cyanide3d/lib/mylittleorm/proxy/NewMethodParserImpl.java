@@ -1,7 +1,8 @@
 package com.cyanide3d.lib.mylittleorm.proxy;
 
 import com.cyanide3d.exception.InvalidInterfaceMethodSignatureException;
-import com.cyanide3d.lib.mylittleorm.database.DatabaseStore;
+import com.cyanide3d.lib.mylittleorm.database.DatabaseConnectionLayer;
+import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
 import com.cyanide3d.lib.mylittleorm.handler.DaoRequestInvocationHandler;
 import com.cyanide3d.lib.mylittleorm.proxy.configurators.FindAllMethodConfigurer;
 import com.cyanide3d.lib.mylittleorm.proxy.configurators.FindByFieldMethodConfigurer;
@@ -13,10 +14,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class NewMethodParserImpl implements MethodParser {
-    private final DatabaseStore dao;
+    private final DatabaseProvider dao;
 
     public NewMethodParserImpl() {
-        dao = new DaoRequestInvocationHandler(new SQLiteDialect());
+        dao = new DaoRequestInvocationHandler(new SQLiteDialect(), new DatabaseConnectionLayer());
     }
 
     @Override

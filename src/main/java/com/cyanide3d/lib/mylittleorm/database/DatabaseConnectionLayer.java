@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseConnectionLayer {
+public class DatabaseConnectionLayer implements DatabaseLayer{
     String DB_URL = "jdbc:sqlite:testorm.db";
     String DB_USER = "root";
     String DB_PASSWORD = "root";
@@ -19,6 +19,7 @@ public class DatabaseConnectionLayer {
     }
 
     @SneakyThrows
+    @Override
     public <T> List<T> findAll(String query, Class<?> clazz) {
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
@@ -26,6 +27,7 @@ public class DatabaseConnectionLayer {
     }
 
     @SneakyThrows
+    @Override
     public <T> List<T> findByField(String query, Object param, Class<?> clazz) {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setObject(1, param);
@@ -48,6 +50,7 @@ public class DatabaseConnectionLayer {
     }
 
     @SneakyThrows
+    @Override
     public void saveOrUpdate(String query, List<Object> params) {
         PreparedStatement statement = connection.prepareStatement(query);
         int index = 1;
@@ -59,6 +62,7 @@ public class DatabaseConnectionLayer {
     }
 
     @SneakyThrows
+    @Override
     public void createTable(String query) {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.executeUpdate();

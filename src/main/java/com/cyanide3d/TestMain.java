@@ -2,7 +2,6 @@ package com.cyanide3d;
 
 
 import com.cyanide3d.lib.mylittleorm.proxy.ProxyCreator;
-import com.cyanide3d.models.TestModel;
 import lombok.SneakyThrows;
 
 public class TestMain {
