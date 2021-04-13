@@ -19,24 +19,26 @@ public class FindByFieldMethodConfigurer implements MethodConfigurer {
     @Override
     public Object configure(Method method, Object[] args, Class<?> clazz) {
         String name = method.getName();
-        if (StringUtils.startsWith(name, "find") && !name.equalsIgnoreCase("findAll")) {
-            return getObject(method, args, clazz, name);
+        if (StringUtils.startsWith(name, "findBy") && !name.equalsIgnoreCase("findAll")) {
+            return getObject(method, args, clazz);
         }
         return null;
     }
 
-    private Object getObject(Method method, Object[] args, Class<?> clazz, String name) {
-        String findField = StringUtils.substringAfter(name, "findBy").toLowerCase();
-        Class<?> returnClass = method.getReturnType();
-            List<Object> entity = dao.findByField(findField, clazz, args[0]);
-            if (returnClass.equals(List.class)) {
-                return entity;
-            } else if (returnClass.equals(Optional.class)) {
-                return entity.isEmpty() ? Optional.empty() : Optional.ofNullable(entity.get(0));
-            } else {
-                if (entity.isEmpty())
-                    throw new EntityNotFoundException("Can't find entity by [" + findField + " = " + args[0] + "].");
-                return entity.get(0);
-            }
+    private Object getObject(Method method, Object[] args, Class<?> clazz) {
+        String findField = method.getName().substring(6);
+        Class<?> returnMethodClass = method.getReturnType();
+        List<Object> entity = dao.findByField(findField, clazz, args[0]);
+
+        if (List.class.isAssignableFrom(returnMethodClass)) {
+            return entity;
+        } else if (Optional.class.isAssignableFrom(returnMethodClass)) {
+            return entity.isEmpty() ? Optional.empty() : Optional.ofNullable(entity.get(0));
+        } else if (entity.isEmpty()) {
+            throw new EntityNotFoundException("Can't find entity by [" + findField + " = " + args[0] + "].");
+        } else {
+            return entity.get(0);
+        }
+
     }
 }

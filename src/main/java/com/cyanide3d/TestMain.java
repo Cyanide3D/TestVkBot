@@ -8,6 +8,6 @@ public class TestMain {
     @SneakyThrows
     public static void main(String[] args) {
         TestRepo proxy = new ProxyCreator().createProxy();
-        System.out.println(proxy.findByLastname("321sd"));
+        System.out.println(proxy.findByLastname("321"));
     }
 }
