@@ -9,6 +9,6 @@ public class TestMain {
     @SneakyThrows
     public static void main(String[] args) {
         TestRepo proxy = new ProxyCreator().createProxy();
-        proxy.save(new TestModel());
+        proxy.findByLastname("321");
     }
 }

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface TestRepo extends Repository<Integer, TestModel> {
 
-    Optional<TestModel> findByLastname(String lastname);
+    TestModel findByLastname(String lastname);
 
 }

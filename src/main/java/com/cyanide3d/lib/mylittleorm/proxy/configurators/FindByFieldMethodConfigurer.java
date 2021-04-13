@@ -1,6 +1,7 @@
 package com.cyanide3d.lib.mylittleorm.proxy.configurators;
 
 import com.cyanide3d.exception.EntityNotFoundException;
+import com.cyanide3d.exception.UnsupportedReturnTypeException;
 import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,6 +33,8 @@ public class FindByFieldMethodConfigurer implements MethodConfigurer {
 
         if (List.class.isAssignableFrom(returnMethodClass)) {
             return entity;
+        } else if ("void".equalsIgnoreCase(returnMethodClass.getName())) {
+            throw new UnsupportedReturnTypeException("You can't use void return type if method name start with 'findBy'");
         } else if (Optional.class.isAssignableFrom(returnMethodClass)) {
             return entity.isEmpty() ? Optional.empty() : Optional.ofNullable(entity.get(0));
         } else if (entity.isEmpty()) {
