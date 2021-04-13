@@ -1,6 +1,7 @@
 package com.cyanide3d.lib.mylittleorm.proxy;
 
 import com.cyanide3d.lib.mylittleorm.repo.Repository;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
@@ -21,15 +22,16 @@ public class ProxyCreator {
 
     public <T> T createProxy() {
         Class<? extends Repository> repo = subTypesOf.iterator().next();
-        return (T) Proxy.newProxyInstance(repo.getClassLoader(), List.of(repo).toArray(Class[]::new), (proxy, method, args) -> {
-            String temp = StringUtils.substringAfter(repo.getGenericInterfaces()[0].getTypeName(), ", ");
-            String res = temp.substring(0, temp.length() - 1);
-            return handle(method, args, Class.forName(res));
-        });
+        return (T) Proxy.newProxyInstance(
+                repo.getClassLoader(),
+                List.of(repo).toArray(Class[]::new),
+                (proxy, method, args) -> methodParser.parse(method, args, getEntityClass(repo))
+        );
     }
 
-    private <T> T handle(Method method, Object[] args, Class<?> clazz) {
-        return (T) methodParser.parse(method, args, clazz);
+    @SneakyThrows
+    private Class<?> getEntityClass(Class<? extends Repository> repo) {
+        String temp = StringUtils.substringAfter(repo.getGenericInterfaces()[0].getTypeName(), ", ");
+        return Class.forName(temp.substring(0, temp.length() - 1));
     }
-
 }

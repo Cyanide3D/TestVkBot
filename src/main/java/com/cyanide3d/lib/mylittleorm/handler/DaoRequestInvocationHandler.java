@@ -7,7 +7,7 @@ import com.cyanide3d.lib.mylittleorm.utils.PrimaryKeyUtils;
 
 import java.util.List;
 
-public class DaoRequestInvocationHandler implements DatabaseProvider {
+public class DaoRequestInvocationHandler<T> implements DatabaseProvider<T> {
 
     private final DatabaseLayer dao;
     private final SQLDialect dialect;
@@ -18,26 +18,26 @@ public class DaoRequestInvocationHandler implements DatabaseProvider {
     }
 
     @Override
-    public <T>List<T> findByField(String field, Class<?> clazz, Object arg) {
+    public List<T> findByField(String field, Class<T> clazz, Object arg) {
         String query = dialect.getSelectQueryExtractor().extract(clazz, List.of(field));
-        return (List<T>) dao.findByField(query, arg, clazz);
+        return dao.findByField(query, arg, clazz);
     }
 
     @Override
-    public <T>List<T> findAll(Class<?> clazz) {
+    public List<T> findAll(Class<T> clazz) {
         String query = dialect.getSelectQueryExtractor().extractAll(clazz);
         return dao.findAll(query, clazz);
     }
 
     @Override
-    public void createTableIfNotExist(Class<?> clazz) {
+    public void createTableIfNotExist(Class<T> clazz) {
         String query = dialect.getCreateTableQueryExtractor().extract(clazz);
         dao.createTable(query);
     }
 
     @Override
-    public void saveOrUpdate(Object entity) {
-        createTableIfNotExist(entity.getClass());
+    public void saveOrUpdate(T entity) {
+        createTableIfNotExist((Class<T>) entity.getClass());
         if (isEntityNotPresent(entity)) {
             save(entity);
         } else {
@@ -45,19 +45,19 @@ public class DaoRequestInvocationHandler implements DatabaseProvider {
         }
     }
 
-    private boolean isEntityNotPresent(Object entity) {
+    private boolean isEntityNotPresent(T entity) {
         String query = dialect.getSelectQueryExtractor().extract(entity.getClass(), List.of(PrimaryKeyUtils.getPrimaryKey(entity.getClass())));
         int primaryKey = PrimaryKeyUtils.getValueOfPrimaryKey(entity);
         return !dao.entityHasPresent(query, primaryKey);
     }
 
-    private void save(Object arg) {
-        String query = dialect.getInsertQueryExtractor().extract(arg.getClass());
-        List<Object> values = ObjectUtils.valueExtractWithoutPrimary(arg);
+    private void save(T entity) {
+        String query = dialect.getInsertQueryExtractor().extract(entity.getClass());
+        List<Object> values = ObjectUtils.valueExtractWithoutPrimary(entity);
         dao.saveOrUpdate(query, values);
     }
 
-    private void update(Object object) {
+    private void update(T object) {
         String query = dialect.getUpdateQueryExtractor().extract(object.getClass());
         List<Object> values = ObjectUtils.valueExtract(object);
         dao.saveOrUpdate(query, values);
