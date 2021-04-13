@@ -36,17 +36,19 @@ public class DaoRequestInvocationHandler implements DatabaseProvider {
     }
 
     @Override
-    public void saveOrUpdate(Object arg) {
-        createTableIfNotExist(arg.getClass());
-        if (isEntityNotPresent(arg)) {
-            save(arg);
+    public void saveOrUpdate(Object entity) {
+        createTableIfNotExist(entity.getClass());
+        if (isEntityNotPresent(entity)) {
+            save(entity);
         } else {
-            update(arg);
+            update(entity);
         }
     }
 
-    private boolean isEntityNotPresent(Object arg) {
-        return false; //TODO
+    private boolean isEntityNotPresent(Object entity) {
+        String query = dialect.getSelectQueryExtractor().extract(entity.getClass(), List.of(PrimaryKeyUtils.getPrimaryKey(entity.getClass())));
+        int primaryKey = PrimaryKeyUtils.getValueOfPrimaryKey(entity);
+        return !dao.entityHasPresent(query, primaryKey);
     }
 
     private void save(Object arg) {
@@ -57,8 +59,7 @@ public class DaoRequestInvocationHandler implements DatabaseProvider {
 
     private void update(Object object) {
         String query = dialect.getUpdateQueryExtractor().extract(object.getClass());
-        List<Object> val = ObjectUtils.valueExtractWithoutPrimary(object);
-        val.add(PrimaryKeyUtils.getValueOfPrimaryKey(object));
-        dao.saveOrUpdate(query, val);
+        List<Object> values = ObjectUtils.valueExtract(object);
+        dao.saveOrUpdate(query, values);
     }
 }

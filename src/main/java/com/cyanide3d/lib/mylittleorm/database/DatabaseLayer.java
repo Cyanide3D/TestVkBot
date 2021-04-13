@@ -8,5 +8,6 @@ public interface DatabaseLayer {
     <T> List<T> findByField(String query, Object param, Class<?> clazz);
     void saveOrUpdate(String query, List<Object> params);
     void createTable(String query);
+    boolean entityHasPresent(String query, Object id);
 
 }

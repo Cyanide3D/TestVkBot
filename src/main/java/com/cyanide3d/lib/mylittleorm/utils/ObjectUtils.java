@@ -11,13 +11,8 @@ public class ObjectUtils {
 
     @SneakyThrows
     public static List<Object> valueExtract(Object object) {
-        List<Object> values = new ArrayList<>();
-        Field[] fields = object.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            field.setAccessible(true);
-            values.add(field.get(object));
-        }
+        List<Object> values = valueExtractWithoutPrimary(object);
+        values.add(PrimaryKeyUtils.getValueOfPrimaryKey(object));
 
         return values;
     }

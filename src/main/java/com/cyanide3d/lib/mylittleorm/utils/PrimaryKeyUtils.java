@@ -28,8 +28,12 @@ public class PrimaryKeyUtils {
 
     @SneakyThrows
     public static int getValueOfPrimaryKey(Object object) {
-        Field fieldId = object.getClass().getDeclaredField(getPrimaryKey(object.getClass()));
-        fieldId.setAccessible(true);
-        return (int) fieldId.get(object);
+        try {
+            Field fieldId = object.getClass().getDeclaredField(getPrimaryKey(object.getClass()));
+            fieldId.setAccessible(true);
+            return (int) fieldId.get(object);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

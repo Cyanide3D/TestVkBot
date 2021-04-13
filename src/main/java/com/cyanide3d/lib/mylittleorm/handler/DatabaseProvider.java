@@ -7,7 +7,6 @@ public interface DatabaseProvider {
     <T> List<T> findByField(String field, Class<?> clazz, Object arg);
     <T> List<T> findAll(Class<?> clazz);
     void createTableIfNotExist(Class<?> clazz);
-    void saveOrUpdate(Object arg);
-
+    void saveOrUpdate(Object entity);
 
 }

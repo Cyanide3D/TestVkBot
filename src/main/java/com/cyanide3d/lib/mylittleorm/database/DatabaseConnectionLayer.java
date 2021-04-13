@@ -68,4 +68,12 @@ public class DatabaseConnectionLayer implements DatabaseLayer{
         statement.executeUpdate();
         statement.close();
     }
+
+    @Override
+    @SneakyThrows
+    public boolean entityHasPresent(String query, Object id) {
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setObject(1, id);
+        return preparedStatement.executeQuery().next();
+    }
 }
