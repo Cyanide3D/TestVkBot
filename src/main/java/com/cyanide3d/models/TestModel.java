@@ -4,7 +4,7 @@ import com.cyanide3d.lib.mylittleorm.annotations.Primary;
 
 public class TestModel {
     @Primary
-    Integer id=5;
+    Integer id=2;
     String name = "asdasdasdasdasdasdasd";
     String lastname = "asasasasasasasasasasas";
 

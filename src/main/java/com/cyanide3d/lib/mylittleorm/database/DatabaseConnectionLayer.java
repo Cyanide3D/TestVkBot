@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseConnectionLayer implements DatabaseLayer{
-    String DB_URL = "jdbc:sqlite:testorm.db";
-    String DB_USER = "root";
-    String DB_PASSWORD = "root";
+    private final String DB_URL = "jdbc:sqlite:testorm.db";
+    private final String DB_USER = "root";
+    private final String DB_PASSWORD = "root";
     Connection connection;
 
     @SneakyThrows
@@ -33,6 +33,14 @@ public class DatabaseConnectionLayer implements DatabaseLayer{
         statement.setObject(1, param);
         ResultSet resultSet = statement.executeQuery();
         return makeEntityList(clazz, resultSet);
+    }
+
+    @Override
+    @SneakyThrows
+    public void delete(String query, Object param) {
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setObject(1, param);
+        statement.execute();
     }
 
     private <T> List<T> makeEntityList(Class<?> clazz, ResultSet resultSet) throws SQLException, InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {

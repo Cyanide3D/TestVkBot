@@ -5,10 +5,7 @@ import com.cyanide3d.exception.InvalidInterfaceMethodSignatureException;
 import com.cyanide3d.lib.mylittleorm.database.DatabaseLayer;
 import com.cyanide3d.lib.mylittleorm.handler.DaoRequestInvocationHandler;
 import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
-import com.cyanide3d.lib.mylittleorm.proxy.configurators.FindAllMethodConfigurer;
-import com.cyanide3d.lib.mylittleorm.proxy.configurators.FindByFieldMethodConfigurer;
-import com.cyanide3d.lib.mylittleorm.proxy.configurators.MethodConfigurer;
-import com.cyanide3d.lib.mylittleorm.proxy.configurators.SaveMethodConfigurer;
+import com.cyanide3d.lib.mylittleorm.proxy.configurators.*;
 import com.cyanide3d.lib.mylittleorm.query.SQLDialect;
 import lombok.SneakyThrows;
 
@@ -37,7 +34,8 @@ public class NewMethodParserImpl implements MethodParser {
         List<MethodConfigurer> methodConfigurers = List.of(
                 new FindByFieldMethodConfigurer(dao),
                 new FindAllMethodConfigurer(dao),
-                new SaveMethodConfigurer(dao)
+                new SaveMethodConfigurer(dao),
+                new DeleteMethodConfigurer(dao)
         );
 
         for (MethodConfigurer methodConfigurer : methodConfigurers) {

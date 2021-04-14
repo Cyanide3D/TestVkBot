@@ -22,4 +22,9 @@ public class SQLiteDialect implements SQLDialect {
     public UpdateQueryExtractor getUpdateQueryExtractor() {
         return new UpdateQueryExtractorImpl();
     }
+
+    @Override
+    public DeleteQueryExtractor getDeleteQueryExtractor() {
+        return new DeleteQueryExtractorImpl();
+    }
 }

@@ -6,6 +6,7 @@ public interface DatabaseProvider<T> {
 
     List<T> findByField(String field, Class<T> clazz, Object arg);
     List<T> findAll(Class<T> clazz);
+    void delete(T entity);
     void createTableIfNotExist(Class<T> clazz);
     void saveOrUpdate(T entity);
 

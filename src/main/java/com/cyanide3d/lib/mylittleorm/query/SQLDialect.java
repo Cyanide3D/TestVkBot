@@ -6,5 +6,6 @@ public interface SQLDialect {
     CreateTableQueryExtractor getCreateTableQueryExtractor();
     SelectQueryExtractor getSelectQueryExtractor();
     UpdateQueryExtractor getUpdateQueryExtractor();
+    DeleteQueryExtractor getDeleteQueryExtractor();
 
 }

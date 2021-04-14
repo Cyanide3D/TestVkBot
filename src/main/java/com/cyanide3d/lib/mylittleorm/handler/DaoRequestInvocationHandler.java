@@ -30,6 +30,13 @@ public class DaoRequestInvocationHandler<T> implements DatabaseProvider<T> {
     }
 
     @Override
+    public void delete(T entity) {
+        String query = dialect.getDeleteQueryExtractor().extract(entity.getClass());
+        Object value = PrimaryKeyUtils.getValueOfPrimaryKey(entity);
+        dao.delete(query, value);
+    }
+
+    @Override
     public void createTableIfNotExist(Class<T> clazz) {
         String query = dialect.getCreateTableQueryExtractor().extract(clazz);
         dao.createTable(query);
