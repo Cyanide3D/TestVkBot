@@ -1,17 +1,16 @@
 package com.cyanide3d.lib.mylittleorm.proxy;
 
-import com.cyanide3d.Main;
 import com.cyanide3d.exception.InvalidInterfaceMethodSignatureException;
 import com.cyanide3d.lib.mylittleorm.database.DatabaseLayer;
 import com.cyanide3d.lib.mylittleorm.handler.DaoRequestInvocationHandler;
 import com.cyanide3d.lib.mylittleorm.handler.DatabaseProvider;
 import com.cyanide3d.lib.mylittleorm.proxy.configurators.*;
 import com.cyanide3d.lib.mylittleorm.query.SQLDialect;
+import com.cyanide3d.lib.mylittleorm.utils.PropertyUtils;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Properties;
 
 public class NewMethodParserImpl implements MethodParser {
     private final DatabaseProvider dao;
@@ -22,10 +21,8 @@ public class NewMethodParserImpl implements MethodParser {
 
     @SneakyThrows
     private DatabaseProvider getDao() {
-        Properties properties = new Properties();
-        properties.load(Main.class.getResourceAsStream("/database.properties"));
-        SQLDialect dialect = (SQLDialect) Class.forName(properties.getProperty("database_dialect")).getDeclaredConstructor().newInstance();
-        DatabaseLayer dao = (DatabaseLayer) Class.forName(properties.getProperty("database_layer")).getDeclaredConstructor().newInstance();
+        SQLDialect dialect = PropertyUtils.getSQLDialect();
+        DatabaseLayer dao = PropertyUtils.getDatabaseLayer();
         return new DaoRequestInvocationHandler(dialect, dao);
     }
 

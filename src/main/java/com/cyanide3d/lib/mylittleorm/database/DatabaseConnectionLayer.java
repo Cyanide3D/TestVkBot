@@ -1,5 +1,7 @@
 package com.cyanide3d.lib.mylittleorm.database;
 
+import com.cyanide3d.lib.annotations.Property;
+import com.cyanide3d.lib.mylittleorm.utils.PropertyUtils;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
@@ -8,14 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseConnectionLayer implements DatabaseLayer{
-    private final String DB_URL = "jdbc:sqlite:testorm.db";
-    private final String DB_USER = "root";
-    private final String DB_PASSWORD = "root";
-    Connection connection;
+    private final Connection connection;
 
     @SneakyThrows
     public DatabaseConnectionLayer() {
-        this.connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        Class.forName(PropertyUtils.getDatabaseDriverPath());
+
+        this.connection = DriverManager.getConnection(
+                PropertyUtils.getDatabaseUrl(),
+                PropertyUtils.getDatabaseUsername(),
+                PropertyUtils.getDatabasePassword()
+        );
     }
 
     @SneakyThrows

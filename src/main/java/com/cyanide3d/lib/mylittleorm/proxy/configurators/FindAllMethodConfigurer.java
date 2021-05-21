@@ -16,10 +16,11 @@ public class FindAllMethodConfigurer implements MethodConfigurer {
 
     @Override
     public Object configure(Method method, Object[] args, Class<?> clazz) {
-        if (!List.class.isAssignableFrom(method.getReturnType())) {
-            throw new UnsupportedReturnTypeException("Method with name " + method.getName() + " work only with List.class return type.");
-        }
         if (method.getName().equalsIgnoreCase("findAll")) {
+            if (!List.class.isAssignableFrom(method.getReturnType())) {
+                throw new UnsupportedReturnTypeException("Method with name " + method.getName() + " work only with List.class return type.");
+            }
+
             return dao.findAll(clazz);
         }
         return null;

@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * @deprecated use {@link NewMethodParserImpl} instead.
+ */
 public class MethodParserImpl implements MethodParser {
 
     private final DaoRequestInvocationHandler daoRequestInvocationHandler;

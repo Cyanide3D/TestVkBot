@@ -16,10 +16,11 @@ public class SaveMethodConfigurer implements MethodConfigurer{
     @Override
     public Object configure(Method method, Object[] args, Class<?> clazz) {
         String returnTypeName = method.getReturnType().getName();
-        if (!returnTypeName.equalsIgnoreCase("void")) {
-            throw new UnsupportedReturnTypeException("Method " + method.getName() + " can't use return type [" + returnTypeName + "].");
-        }
         if (method.getName().equalsIgnoreCase("save")) {
+            if (!returnTypeName.equalsIgnoreCase("void")) {
+                throw new UnsupportedReturnTypeException("Method " + method.getName() + " can't use return type [" + returnTypeName + "].");
+            }
+
             dao.saveOrUpdate(args[0]);
             return true;
         }
